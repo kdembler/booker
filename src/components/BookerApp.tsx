@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Container, Grid, Header, Icon } from 'semantic-ui-react'
 
 import IBook from '../book'
@@ -28,19 +29,25 @@ const books: IBook[] = [
   }
 ]
 
+const PopulatedBookList = () => <BookList books={books} />
+
 const BookerApp = () => {
   return (
-    <Grid centered={true} padded="vertically" textAlign="center">
-      <Grid.Row>
-        <Container>
-          <Header as="h1" icon={true} textAlign="center">
-            <Icon name="book" circular={true} />
-            Booker - <i>book your books</i>
-          </Header>
-          <BookList books={books} />
-        </Container>
-      </Grid.Row>
-    </Grid>
+    <Router>
+      <Grid centered={true} padded="vertically" textAlign="center">
+        <Grid.Row>
+          <Container>
+            <Header as="h1" icon={true} textAlign="center">
+              <Icon name="book" circular={true} />
+              Booker - <i>book your books</i>
+            </Header>
+            <Switch>
+              <Route exact={true} path="/" component={PopulatedBookList} />
+            </Switch>
+          </Container>
+        </Grid.Row>
+      </Grid>
+    </Router>
   )
 }
 
