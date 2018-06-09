@@ -1,13 +1,8 @@
 import * as React from 'react'
-import { Button, Container, Grid, Header, Icon, Rating, Table } from 'semantic-ui-react'
+import { Container, Grid, Header, Icon } from 'semantic-ui-react'
 
-interface IBook {
-  author: string
-  isbn: string
-  pages: number
-  rating: number
-  title: string
-}
+import IBook from '../book'
+import BookList from './BookList'
 
 const books: IBook[] = [
   {
@@ -34,21 +29,6 @@ const books: IBook[] = [
 ]
 
 const BookerApp = () => {
-  const rows = books.map(book => (
-    <Table.Row>
-      <Table.Cell>{book.title}</Table.Cell>
-      <Table.Cell>{book.author}</Table.Cell>
-      <Table.Cell>{book.isbn}</Table.Cell>
-      <Table.Cell>{book.pages}</Table.Cell>
-      <Table.Cell>
-        <Rating maxRating={5} rating={book.rating} disabled={true} icon="star" />
-      </Table.Cell>
-      <Table.Cell width="2">
-        <Button color="blue" icon="edit" />
-        <Button color="red" icon="remove" />
-      </Table.Cell>
-    </Table.Row>
-  ))
   return (
     <Grid centered={true} padded="vertically" textAlign="center">
       <Grid.Row>
@@ -57,32 +37,7 @@ const BookerApp = () => {
             <Icon name="book" circular={true} />
             Booker - <i>book your books</i>
           </Header>
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Title</Table.HeaderCell>
-                <Table.HeaderCell>Author Date</Table.HeaderCell>
-                <Table.HeaderCell>ISBN</Table.HeaderCell>
-                <Table.HeaderCell>Pages</Table.HeaderCell>
-                <Table.HeaderCell>Rating</Table.HeaderCell>
-                <Table.HeaderCell>Actions</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>{rows}</Table.Body>
-            <Table.Footer>
-              <Table.Row>
-                <Table.HeaderCell colSpan="6">
-                  <Button
-                    positive={true}
-                    content="Add a book"
-                    icon="add"
-                    labelPosition="left"
-                    floated="left"
-                  />
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Footer>
-          </Table>
+          <BookList books={books} />
         </Container>
       </Grid.Row>
     </Grid>
