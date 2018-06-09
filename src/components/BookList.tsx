@@ -1,28 +1,43 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
 import { Button, Rating, Table } from 'semantic-ui-react'
 
-import IBook from '../book'
+import { EditAction } from '../actions/types'
+import { AppState, Book } from '../types'
 
-interface IBookListProps {
-  books: IBook[]
+interface BookListStateProps {
+  books?: Book[]
 }
 
-const BookList: React.SFC<IBookListProps> = ({ books }) => {
-  const rows = books.map(book => (
-    <Table.Row>
-      <Table.Cell>{book.title}</Table.Cell>
-      <Table.Cell>{book.author}</Table.Cell>
-      <Table.Cell>{book.isbn}</Table.Cell>
-      <Table.Cell>{book.pages}</Table.Cell>
-      <Table.Cell>
-        <Rating maxRating={5} rating={book.rating} disabled={true} icon="star" />
-      </Table.Cell>
-      <Table.Cell width="2">
-        <Button color="blue" icon="edit" />
-        <Button color="red" icon="remove" />
-      </Table.Cell>
-    </Table.Row>
-  ))
+interface BookListDispatchProps {
+  editBook: (_: Book) => void
+  removeBook: (_: Book) => void
+}
+
+type BookListProps = BookListStateProps & BookListDispatchProps
+
+const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => {
+  const rows = books!.map(book => {
+    const edit = () => {
+      editBook(book)
+    }
+    return (
+      <Table.Row key={book.isbn}>
+        <Table.Cell>{book.title}</Table.Cell>
+        <Table.Cell>{book.author}</Table.Cell>
+        <Table.Cell>{book.isbn}</Table.Cell>
+        <Table.Cell>{book.pages}</Table.Cell>
+        <Table.Cell>
+          <Rating maxRating={5} rating={book.rating} disabled={true} icon="star" />
+        </Table.Cell>
+        <Table.Cell width="2">
+          <Button color="blue" icon="edit" onClick={edit} />
+          <Button color="red" icon="remove" />
+        </Table.Cell>
+      </Table.Row>
+    )
+  })
   return (
     <Table>
       <Table.Header>
@@ -53,4 +68,20 @@ const BookList: React.SFC<IBookListProps> = ({ books }) => {
   )
 }
 
-export default BookList
+const mapStateToProps = (state: AppState): BookListStateProps => ({
+  books: state.books
+})
+
+const mapDispatchToProps = (dispatch: Dispatch<EditAction>): BookListDispatchProps => ({
+  editBook: (book: Book) => {
+    dispatch({ type: 'OPEN_EDIT', book })
+  },
+  removeBook: (book: Book) => {
+    // remove
+  }
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BookList)
