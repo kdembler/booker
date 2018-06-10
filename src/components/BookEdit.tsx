@@ -30,9 +30,11 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
   onRatingChange,
   saveBook
 }) => {
-  const save = () => {
+  const onSave = (e: React.FormEvent) => {
+    e.preventDefault()
     saveBook(values, isbn)
   }
+
   return (
     <Modal open={open}>
       <Modal.Content>
@@ -42,7 +44,7 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
               <Header as="h4" dividing={true}>
                 {isbn ? 'Edit a book' : 'Add a new book'}
               </Header>
-              <Form>
+              <Form onSubmit={onSave}>
                 <Form.Input
                   fluid={true}
                   iconPosition="left"
@@ -91,9 +93,11 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
                   />
                 </Form.Field>
                 <Button.Group fluid={true}>
-                  <Button onClick={closeModal}>Discard</Button>
+                  <Button type="button" onClick={closeModal}>
+                    Discard
+                  </Button>
                   <Button.Or />
-                  <Button positive={true} onClick={save}>
+                  <Button positive={true} type="submit" onClick={onSave}>
                     Save
                   </Button>
                 </Button.Group>

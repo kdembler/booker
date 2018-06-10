@@ -18,20 +18,14 @@ interface BookListDispatchProps {
 type BookListProps = BookListStateProps & BookListDispatchProps
 
 const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => {
-  const addButtonCallback = () => editBook(undefined)
+  const onAdd = () => editBook(undefined)
   const addButton = (
-    <Button
-      positive={true}
-      content="Add a book"
-      icon="add"
-      labelPosition="left"
-      onClick={addButtonCallback}
-    />
+    <Button positive={true} content="Add a book" icon="add" labelPosition="left" onClick={onAdd} />
   )
   if (books.length > 0) {
     const rows = books.map(book => {
-      const editButtonCallback = () => editBook(book)
-      const removeButtonCallback = () => removeBook(book)
+      const onEdit = () => editBook(book)
+      const onRemove = () => removeBook(book)
       return (
         <Table.Row key={book.isbn}>
           <Table.Cell>{book.title}</Table.Cell>
@@ -42,8 +36,8 @@ const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => 
             <Rating maxRating={5} rating={book.rating} disabled={true} icon="star" />
           </Table.Cell>
           <Table.Cell width="2">
-            <Button color="blue" icon="edit" onClick={editButtonCallback} />
-            <Button color="red" icon="remove" onClick={removeButtonCallback} />
+            <Button color="blue" icon="edit" onClick={onEdit} />
+            <Button color="red" icon="remove" onClick={onRemove} />
           </Table.Cell>
         </Table.Row>
       )
