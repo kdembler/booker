@@ -22,7 +22,7 @@ export type BooksAction = AddBookAction | EditBookAction | RemoveBookAction
 
 export interface OpenEditAction extends Action {
   type: 'OPEN_EDIT'
-  book: Book
+  book?: Book
 }
 
 export interface CloseEditAction extends Action {

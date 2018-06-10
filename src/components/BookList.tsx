@@ -11,7 +11,7 @@ interface BookListStateProps {
 }
 
 interface BookListDispatchProps {
-  editBook: (_: Book) => void
+  editBook: (_?: Book) => void
   removeBook: (_: Book) => void
 }
 
@@ -19,8 +19,8 @@ type BookListProps = BookListStateProps & BookListDispatchProps
 
 const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => {
   const rows = books!.map(book => {
-    const edit = () => editBook(book)
-    const remove = () => removeBook(book)
+    const editButtonCallback = () => editBook(book)
+    const removeButtonCallback = () => removeBook(book)
     return (
       <Table.Row key={book.isbn}>
         <Table.Cell>{book.title}</Table.Cell>
@@ -31,12 +31,13 @@ const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => 
           <Rating maxRating={5} rating={book.rating} disabled={true} icon="star" />
         </Table.Cell>
         <Table.Cell width="2">
-          <Button color="blue" icon="edit" onClick={edit} />
-          <Button color="red" icon="remove" onClick={remove} />
+          <Button color="blue" icon="edit" onClick={editButtonCallback} />
+          <Button color="red" icon="remove" onClick={removeButtonCallback} />
         </Table.Cell>
       </Table.Row>
     )
   })
+  const addButtonCallback = () => editBook(undefined)
   return (
     <Table>
       <Table.Header>
@@ -59,6 +60,7 @@ const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => 
               icon="add"
               labelPosition="left"
               floated="left"
+              onClick={addButtonCallback}
             />
           </Table.HeaderCell>
         </Table.Row>
@@ -72,10 +74,10 @@ const mapStateToProps = (state: AppState): BookListStateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookListDispatchProps => ({
-  editBook: (book: Book) => {
+  editBook: book => {
     dispatch({ type: 'OPEN_EDIT', book })
   },
-  removeBook: (book: Book) => {
+  removeBook: book => {
     dispatch({
       book,
       type: 'REMOVE_BOOK'
