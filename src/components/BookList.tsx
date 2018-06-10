@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { Button, Rating, Table } from 'semantic-ui-react'
 
-import { EditAction } from '../actions/types'
+import { BookerAction } from '../actions/types'
 import { AppState, Book } from '../types'
 
 interface BookListStateProps {
@@ -19,9 +19,8 @@ type BookListProps = BookListStateProps & BookListDispatchProps
 
 const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => {
   const rows = books!.map(book => {
-    const edit = () => {
-      editBook(book)
-    }
+    const edit = () => editBook(book)
+    const remove = () => removeBook(book)
     return (
       <Table.Row key={book.isbn}>
         <Table.Cell>{book.title}</Table.Cell>
@@ -33,7 +32,7 @@ const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => 
         </Table.Cell>
         <Table.Cell width="2">
           <Button color="blue" icon="edit" onClick={edit} />
-          <Button color="red" icon="remove" />
+          <Button color="red" icon="remove" onClick={remove} />
         </Table.Cell>
       </Table.Row>
     )
@@ -72,12 +71,15 @@ const mapStateToProps = (state: AppState): BookListStateProps => ({
   books: state.books
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<EditAction>): BookListDispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookListDispatchProps => ({
   editBook: (book: Book) => {
     dispatch({ type: 'OPEN_EDIT', book })
   },
   removeBook: (book: Book) => {
-    // remove
+    dispatch({
+      book,
+      type: 'REMOVE_BOOK'
+    })
   }
 })
 
