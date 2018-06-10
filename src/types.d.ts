@@ -13,6 +13,6 @@ export interface EditState {
 }
 
 export interface AppState {
-  books?: Book[]
+  books: Book[]
   edit: EditState
 }

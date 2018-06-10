@@ -1,16 +1,10 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
 import { Container, Grid, Header, Icon } from 'semantic-ui-react'
 
-import { AppState, Book } from '../types'
 import BookEditModal from './BookEdit'
 import BookList from './BookList'
 
-interface BookerStateProps {
-  books?: Book[]
-}
-
-const BookerApp: React.SFC<BookerStateProps> = ({ books }) => {
+const BookerApp = () => {
   return (
     <div>
       <Grid padded="vertically" centered={true}>
@@ -29,8 +23,4 @@ const BookerApp: React.SFC<BookerStateProps> = ({ books }) => {
   )
 }
 
-const mapStateToProps = (state: AppState): BookerStateProps => ({
-  books: state.books
-})
-
-export default connect(mapStateToProps)(BookerApp)
+export default BookerApp

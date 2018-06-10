@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
-import { Button, Rating, Table } from 'semantic-ui-react'
+import { Button, Header, Rating, Table } from 'semantic-ui-react'
 
 import { BookerAction } from '../actions/types'
 import { AppState, Book } from '../types'
 
 interface BookListStateProps {
-  books?: Book[]
+  books: Book[]
 }
 
 interface BookListDispatchProps {
@@ -18,55 +18,65 @@ interface BookListDispatchProps {
 type BookListProps = BookListStateProps & BookListDispatchProps
 
 const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => {
-  const rows = books!.map(book => {
-    const editButtonCallback = () => editBook(book)
-    const removeButtonCallback = () => removeBook(book)
-    return (
-      <Table.Row key={book.isbn}>
-        <Table.Cell>{book.title}</Table.Cell>
-        <Table.Cell>{book.author}</Table.Cell>
-        <Table.Cell>{book.isbn}</Table.Cell>
-        <Table.Cell>{book.pages}</Table.Cell>
-        <Table.Cell>
-          <Rating maxRating={5} rating={book.rating} disabled={true} icon="star" />
-        </Table.Cell>
-        <Table.Cell width="2">
-          <Button color="blue" icon="edit" onClick={editButtonCallback} />
-          <Button color="red" icon="remove" onClick={removeButtonCallback} />
-        </Table.Cell>
-      </Table.Row>
-    )
-  })
   const addButtonCallback = () => editBook(undefined)
-  return (
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Title</Table.HeaderCell>
-          <Table.HeaderCell>Author Date</Table.HeaderCell>
-          <Table.HeaderCell>ISBN</Table.HeaderCell>
-          <Table.HeaderCell>Pages</Table.HeaderCell>
-          <Table.HeaderCell>Rating</Table.HeaderCell>
-          <Table.HeaderCell>Actions</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>{rows}</Table.Body>
-      <Table.Footer>
-        <Table.Row>
-          <Table.HeaderCell colSpan="6">
-            <Button
-              positive={true}
-              content="Add a book"
-              icon="add"
-              labelPosition="left"
-              floated="left"
-              onClick={addButtonCallback}
-            />
-          </Table.HeaderCell>
-        </Table.Row>
-      </Table.Footer>
-    </Table>
+  const addButton = (
+    <Button
+      positive={true}
+      content="Add a book"
+      icon="add"
+      labelPosition="left"
+      onClick={addButtonCallback}
+    />
   )
+  if (books.length > 0) {
+    const rows = books.map(book => {
+      const editButtonCallback = () => editBook(book)
+      const removeButtonCallback = () => removeBook(book)
+      return (
+        <Table.Row key={book.isbn}>
+          <Table.Cell>{book.title}</Table.Cell>
+          <Table.Cell>{book.author}</Table.Cell>
+          <Table.Cell>{book.isbn}</Table.Cell>
+          <Table.Cell>{book.pages}</Table.Cell>
+          <Table.Cell>
+            <Rating maxRating={5} rating={book.rating} disabled={true} icon="star" />
+          </Table.Cell>
+          <Table.Cell width="2">
+            <Button color="blue" icon="edit" onClick={editButtonCallback} />
+            <Button color="red" icon="remove" onClick={removeButtonCallback} />
+          </Table.Cell>
+        </Table.Row>
+      )
+    })
+
+    return (
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Title</Table.HeaderCell>
+            <Table.HeaderCell>Author Date</Table.HeaderCell>
+            <Table.HeaderCell>ISBN</Table.HeaderCell>
+            <Table.HeaderCell>Pages</Table.HeaderCell>
+            <Table.HeaderCell>Rating</Table.HeaderCell>
+            <Table.HeaderCell>Actions</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>{rows}</Table.Body>
+        <Table.Footer>
+          <Table.Row>
+            <Table.HeaderCell colSpan="6">{addButton}</Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      </Table>
+    )
+  } else {
+    return (
+      <div>
+        <Header as="h3">No books yet. Maybe add one?</Header>
+        {addButton}
+      </div>
+    )
+  }
 }
 
 const mapStateToProps = (state: AppState): BookListStateProps => ({
