@@ -48,7 +48,7 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
                 <Form.Input
                   fluid={true}
                   iconPosition="left"
-                  icon="user"
+                  icon="pencil"
                   label="Title"
                   name="title"
                   value={values.title}
@@ -66,7 +66,7 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
                 <Form.Input
                   fluid={true}
                   iconPosition="left"
-                  icon="user"
+                  icon="id card"
                   label="ISBN"
                   name="isbn"
                   value={values.isbn}
@@ -75,7 +75,7 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
                 <Form.Input
                   fluid={true}
                   iconPosition="left"
-                  icon="user"
+                  icon="book"
                   type="number"
                   label="Pages #"
                   name="pages"
@@ -87,7 +87,7 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
                   <Rating
                     icon="star"
                     maxRating={5}
-                    size="huge"
+                    size="massive"
                     rating={values.rating}
                     onRate={onRatingChange}
                   />
