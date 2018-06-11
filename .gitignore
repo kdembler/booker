@@ -9,8 +9,8 @@
 # production
 /build
 
-# server build
-/server/build
+# ts build
+/src/build
 
 # misc
 .DS_Store

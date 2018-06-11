@@ -51,8 +51,9 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "tsc -p server && concurrently \"node scripts/start.js\" \"tsc -w -p server\" \"nodemon server/build/app.js\"",
-    "build": "node scripts/build.js && tsc -p server",
+    "start": "tsc -p src && concurrently \"node scripts/start.js\" \"tsc -w -p src\" \"nodemon src/build/server/app.js\"",
+    "start-server": "node src/build/server/app.js",
+    "build": "node scripts/build.js && tsc -p src",
     "test": "node scripts/test.js --env=jsdom"
   },
   "devDependencies": {

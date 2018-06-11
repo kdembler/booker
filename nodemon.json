@@ -1,5 +1,5 @@
 {
-  "watch": ["server/build/*.js"],
+  "watch": ["src/build/server/*.js"],
   "env": {
     "NODE_ENV": "development"
   }

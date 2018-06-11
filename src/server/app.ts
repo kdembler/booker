@@ -1,7 +1,7 @@
 import * as express from 'express'
 import * as path from 'path'
 
-const clientBuildPath = path.join(__dirname, '..', '..', 'build')
+const clientBuildPath = path.join(__dirname, '..', '..', '..', 'build')
 const port = process.env.NODE_ENV === 'development' ? 3001 : 8080
 
 const app = express()
