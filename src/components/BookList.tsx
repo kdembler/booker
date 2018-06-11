@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { Button, Header, Rating, Table } from 'semantic-ui-react'
 
+import * as actions from '../actions'
 import { BookerAction } from '../actions/types'
 import { AppState, Book } from '../types'
 
@@ -79,13 +80,10 @@ const mapStateToProps = (state: AppState): BookListStateProps => ({
 
 const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookListDispatchProps => ({
   editBook: book => {
-    dispatch({ type: 'EDIT_OPEN', book })
+    dispatch(actions.openEdit(book))
   },
   removeBook: book => {
-    dispatch({
-      book,
-      type: 'BOOK_REMOVE'
-    })
+    dispatch(actions.removeBook(book))
   }
 })
 

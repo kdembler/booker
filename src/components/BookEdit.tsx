@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { Button, Form, Grid, Header, Message, Modal, Rating, Segment } from 'semantic-ui-react'
 
+import * as actions from '../actions'
 import { BookerAction } from '../actions/types'
 import { editFields, errorMessages } from '../constants'
 import { AppState, Book, EditState } from '../types'
@@ -148,11 +149,7 @@ const validateFieldAndDispatch = (
       ok = value.length > 0
       break
   }
-  dispatch({
-    error: !ok,
-    field,
-    type: 'EDIT_VALIDATION_ERROR'
-  })
+  dispatch(actions.changeValidationError(field, !ok))
   return ok
 }
 
@@ -172,9 +169,7 @@ const mapStateToProps = (state: AppState): BookEditModalStateProps => ({
 
 const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookEditModalDispatchProps => ({
   closeModal: () => {
-    dispatch({
-      type: 'EDIT_CLOSE'
-    })
+    dispatch(actions.closeEdit())
   },
   onChange: e => {
     const field = e.currentTarget.name
@@ -182,18 +177,10 @@ const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookEditModalDisp
 
     validateFieldAndDispatch(field, value, dispatch)
 
-    dispatch({
-      field,
-      type: 'EDIT_ONCHANGE',
-      value
-    })
+    dispatch(actions.changeValue(field, value))
   },
   onRatingChange: (_, { rating }) => {
-    dispatch({
-      field: 'rating',
-      type: 'EDIT_ONCHANGE',
-      value: rating
-    })
+    dispatch(actions.changeValue('rating', rating))
   },
   saveBook: (book, isbn) => {
     // check if all fields are valid before saving
@@ -201,20 +188,11 @@ const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookEditModalDisp
       return
     }
     if (!isbn) {
-      dispatch({
-        book,
-        type: 'BOOK_ADD'
-      })
+      dispatch(actions.addBook(book))
     } else {
-      dispatch({
-        book,
-        isbn,
-        type: 'BOOK_EDIT'
-      })
+      dispatch(actions.editBook(book, isbn))
     }
-    dispatch({
-      type: 'EDIT_CLOSE'
-    })
+    dispatch(actions.closeEdit())
   }
 })
 
