@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { Button, Form, Grid, Header, Message, Modal, Rating, Segment } from 'semantic-ui-react'
 
+import { isValidISBN } from '../../common/utils'
 import * as actions from '../actions'
 import { BookerAction } from '../actions/types'
 import { editFields, errorMessages } from '../constants'
 import { AppState, Book, EditState } from '../types'
-import { isValidISBN } from '../utils'
 
 interface BookEditModalStateProps {
   edit: EditState

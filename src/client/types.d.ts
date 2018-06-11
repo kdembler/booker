@@ -1,10 +1,6 @@
-export interface Book {
-  author: string
-  isbn: string
-  pages: number
-  rating: number
-  title: string
-}
+import { Book } from '../common/types'
+
+export { Book }
 
 export interface EditState {
   book?: Book
