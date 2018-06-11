@@ -8,6 +8,12 @@ export interface Book {
 
 export interface EditState {
   book?: Book
+  errors: {
+    author: boolean
+    isbn: boolean
+    pages: boolean
+    title: boolean
+  }
   open: boolean
   values: Book
 }

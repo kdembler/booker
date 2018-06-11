@@ -20,7 +20,7 @@ type BookListProps = BookListStateProps & BookListDispatchProps
 const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => {
   const onAdd = () => editBook(undefined)
   const addButton = (
-    <Button positive={true} content="Add a book" icon="add" labelPosition="left" onClick={onAdd} />
+    <Button positive content="Add a book" icon="add" labelPosition="left" onClick={onAdd} />
   )
   if (books.length > 0) {
     const rows = books.map(book => {
@@ -33,7 +33,7 @@ const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => 
           <Table.Cell>{book.isbn}</Table.Cell>
           <Table.Cell>{book.pages}</Table.Cell>
           <Table.Cell>
-            <Rating maxRating={5} rating={book.rating} disabled={true} icon="star" />
+            <Rating maxRating={5} rating={book.rating} disabled icon="star" />
           </Table.Cell>
           <Table.Cell width="2">
             <Button color="blue" icon="edit" onClick={onEdit} />
@@ -79,12 +79,12 @@ const mapStateToProps = (state: AppState): BookListStateProps => ({
 
 const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookListDispatchProps => ({
   editBook: book => {
-    dispatch({ type: 'OPEN_EDIT', book })
+    dispatch({ type: 'EDIT_OPEN', book })
   },
   removeBook: book => {
     dispatch({
       book,
-      type: 'REMOVE_BOOK'
+      type: 'BOOK_REMOVE'
     })
   }
 })

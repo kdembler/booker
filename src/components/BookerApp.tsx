@@ -7,11 +7,11 @@ import BookList from './BookList'
 const BookerApp = () => {
   return (
     <div>
-      <Grid padded="vertically" centered={true}>
+      <Grid padded="vertically" centered>
         <Grid.Row>
           <Container>
-            <Header as="h1" icon={true} textAlign="center">
-              <Icon name="book" circular={true} />
+            <Header as="h1" icon textAlign="center">
+              <Icon name="book" circular />
               Booker - <i>book your books</i>
             </Header>
             <BookList />

@@ -6,37 +6,53 @@ import { Book, EditState } from '../types'
 
 const books = (state: Book[] = [], action: BooksAction): Book[] => {
   switch (action.type) {
-    case 'ADD_BOOK':
+    case 'BOOK_ADD':
       return [...state, action.book]
-    case 'EDIT_BOOK':
+    case 'BOOK_EDIT':
       return state.map(book => (book.isbn !== action.isbn ? book : action.book))
-    case 'REMOVE_BOOK':
+    case 'BOOK_REMOVE':
       return state.filter(book => book.isbn !== action.book.isbn)
     default:
       return state
   }
 }
 
+const noEditErrors = {
+  author: false,
+  isbn: false,
+  pages: false,
+  title: false
+}
+
 const edit = (state: EditState = initalEditState, action: EditAction): EditState => {
   switch (action.type) {
-    case 'OPEN_EDIT':
+    case 'EDIT_OPEN':
       return {
         ...state,
         book: action.book,
         open: true,
         values: action.book || emptyBook
       }
-    case 'CLOSE_EDIT':
+    case 'EDIT_CLOSE':
       return {
         ...state,
+        errors: noEditErrors,
         open: false
       }
-    case 'ONCHANGE_EDIT':
+    case 'EDIT_ONCHANGE':
       return {
         ...state,
         values: {
           ...state.values,
           [action.field]: action.value
+        }
+      }
+    case 'EDIT_VALIDATION_ERROR':
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          [action.field]: action.error
         }
       }
     default:

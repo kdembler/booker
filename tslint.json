@@ -4,6 +4,8 @@
     "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
   },
   "rules": {
-    "interface-name": [true, "never-prefix"]
+    "interface-name": [true, "never-prefix"],
+    "no-console": false,
+    "jsx-boolean-value": false
   }
 }
