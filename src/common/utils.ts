@@ -18,7 +18,6 @@ export const isValidISBN = (isbnValue: string): boolean => {
   } else if (/^\d{13}$/.test(isbn)) {
     // ISBN-13
     const check = Number(isbn.slice(-1))
-    console.log(`Provided check: ${check}`)
     const digits = toDigits(isbn.slice(0, 12))
 
     let c =
@@ -29,7 +28,6 @@ export const isValidISBN = (isbnValue: string): boolean => {
         return acc + cur
       }, 0) % 10
     c = 10 - c
-    console.log(`Calculated check: ${check}`)
 
     return (c === 10 && check === 0) || c === check
   }
