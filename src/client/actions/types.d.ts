@@ -7,6 +7,11 @@ export interface AddBookAction extends Action {
   book: Book
 }
 
+export interface ChangeFetchingAction extends Action {
+  type: 'BOOKS_FETCHING'
+  fetching: boolean
+}
+
 export interface EditBookAction extends Action {
   type: 'BOOK_EDIT'
   isbn: string
@@ -18,7 +23,17 @@ export interface RemoveBookAction extends Action {
   book: Book
 }
 
-export type BooksAction = AddBookAction | EditBookAction | RemoveBookAction
+export interface ReplaceBooksAction extends Action {
+  type: 'BOOKS_REPLACE_ALL'
+  books: Book[]
+}
+
+export type BooksAction =
+  | AddBookAction
+  | ChangeFetchingAction
+  | EditBookAction
+  | RemoveBookAction
+  | ReplaceBooksAction
 
 export interface OpenEditAction extends Action {
   type: 'EDIT_OPEN'

@@ -1,6 +1,43 @@
-import { Book } from '../types'
+import { Dispatch } from 'redux'
+import { ThunkAction } from 'redux-thunk'
+
+import { Book, BookerState } from '../types'
 import * as types from './types'
 
+const delay = (s: number) => new Promise((resolve, error) => setTimeout(() => resolve(), s * 1000))
+
+type AsyncAction = ThunkAction<void, BookerState, undefined, types.BookerAction>
+
+// async actions
+export const refreshBooks = (): AsyncAction => {
+  return (dispatch: Dispatch<types.BookerAction>) => {
+    dispatch(changeFetching(true))
+    delay(2).then(() => {
+      fetch('/api/books')
+        .then(response => {
+          if (!response.ok) {
+            // handle error
+          }
+          return response.json()
+        })
+        .then(json => {
+          const books = json as Book[]
+          dispatch({
+            books,
+            type: 'BOOKS_REPLACE_ALL'
+          })
+        })
+        .then(() => dispatch(changeFetching(false)))
+    })
+  }
+}
+
+const changeFetching = (fetching: boolean): types.ChangeFetchingAction => ({
+  fetching,
+  type: 'BOOKS_FETCHING'
+})
+
+// standard actions
 export const addBook = (book: Book): types.AddBookAction => ({
   book,
   type: 'BOOK_ADD'

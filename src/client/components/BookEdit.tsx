@@ -5,9 +5,8 @@ import { Button, Form, Grid, Header, Message, Modal, Rating, Segment } from 'sem
 
 import { isValidISBN } from '../../common/utils'
 import * as actions from '../actions'
-import { BookerAction } from '../actions/types'
 import { editFields, errorMessages } from '../constants'
-import { AppState, Book, EditState } from '../types'
+import { Book, BookerAction, BookerDispatch, BookerState, EditState } from '../types'
 
 interface BookEditModalStateProps {
   edit: EditState
@@ -163,11 +162,11 @@ const validateAllFieldsAndDispatch = (values: Book, dispatch: Dispatch<BookerAct
   return ok
 }
 
-const mapStateToProps = (state: AppState): BookEditModalStateProps => ({
+const mapStateToProps = (state: BookerState): BookEditModalStateProps => ({
   edit: state.edit
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookEditModalDispatchProps => ({
+const mapDispatchToProps = (dispatch: BookerDispatch): BookEditModalDispatchProps => ({
   closeModal: () => {
     dispatch(actions.closeEdit())
   },

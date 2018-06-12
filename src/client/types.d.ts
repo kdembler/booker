@@ -1,6 +1,14 @@
-import { Book } from '../common/types'
+import { ThunkDispatch } from 'redux-thunk'
 
-export { Book }
+import { Book } from '../common/types'
+import { BookerAction } from './actions/types'
+
+export { Book, BookerAction }
+
+export interface BooksState {
+  fetching: boolean
+  list: Book[]
+}
 
 export interface EditState {
   book?: Book
@@ -14,7 +22,9 @@ export interface EditState {
   values: Book
 }
 
-export interface AppState {
-  books: Book[]
+export interface BookerState {
+  books: BooksState
   edit: EditState
 }
+
+export type BookerDispatch = ThunkDispatch<BookerState, undefined, BookerAction>

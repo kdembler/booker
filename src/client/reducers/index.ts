@@ -1,17 +1,39 @@
 import { combineReducers } from 'redux'
 
 import { BooksAction, EditAction } from '../actions/types'
-import { emptyBook, initalEditState } from '../constants'
-import { Book, EditState } from '../types'
+import { emptyBook, initalBooksState, initalEditState } from '../constants'
+import { BooksState, EditState } from '../types'
 
-const books = (state: Book[] = [], action: BooksAction): Book[] => {
+const books = (state: BooksState = initalBooksState, action: BooksAction): BooksState => {
+  let list
   switch (action.type) {
     case 'BOOK_ADD':
-      return [...state, action.book]
+      return {
+        fetching: state.fetching,
+        list: [...state.list, action.book]
+      }
     case 'BOOK_EDIT':
-      return state.map(book => (book.isbn !== action.isbn ? book : action.book))
+      list = state.list.map(book => (book.isbn !== action.isbn ? book : action.book))
+      return {
+        fetching: state.fetching,
+        list
+      }
+    case 'BOOKS_FETCHING':
+      return {
+        fetching: action.fetching,
+        list: state.list
+      }
+    case 'BOOKS_REPLACE_ALL':
+      return {
+        fetching: state.fetching,
+        list: action.books
+      }
     case 'BOOK_REMOVE':
-      return state.filter(book => book.isbn !== action.book.isbn)
+      list = state.list.filter(book => book.isbn !== action.book.isbn)
+      return {
+        fetching: state.fetching,
+        list
+      }
     default:
       return state
   }

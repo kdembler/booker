@@ -1,28 +1,36 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux'
-import { Button, Header, Rating, Table } from 'semantic-ui-react'
+import { Button, Header, Icon, Loader, Rating, Table } from 'semantic-ui-react'
 
 import * as actions from '../actions'
-import { BookerAction } from '../actions/types'
-import { AppState, Book } from '../types'
+import { Book, BookerDispatch, BookerState } from '../types'
 
 interface BookListStateProps {
   books: Book[]
+  fetching: boolean
 }
 
 interface BookListDispatchProps {
   editBook: (_?: Book) => void
   removeBook: (_: Book) => void
+  refreshBooks: () => void
 }
 
 type BookListProps = BookListStateProps & BookListDispatchProps
 
-const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => {
+const BookList: React.SFC<BookListProps> = ({
+  books,
+  fetching,
+  editBook,
+  removeBook,
+  refreshBooks
+}) => {
   const onAdd = () => editBook(undefined)
+  const onRefresh = () => !fetching && refreshBooks()
   const addButton = (
     <Button positive content="Add a book" icon="add" labelPosition="left" onClick={onAdd} />
   )
+
   if (books.length > 0) {
     const rows = books.map(book => {
       const onEdit = () => editBook(book)
@@ -43,7 +51,6 @@ const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => 
         </Table.Row>
       )
     })
-
     return (
       <Table>
         <Table.Header>
@@ -59,28 +66,53 @@ const BookList: React.SFC<BookListProps> = ({ books, editBook, removeBook }) => 
         <Table.Body>{rows}</Table.Body>
         <Table.Footer>
           <Table.Row>
-            <Table.HeaderCell colSpan="6">{addButton}</Table.HeaderCell>
+            <Table.HeaderCell colSpan="6">
+              {addButton}
+              <Button
+                floated="right"
+                icon
+                color="blue"
+                labelPosition="left"
+                loading={fetching}
+                onClick={onRefresh}
+              >
+                <Icon name="refresh" />
+                Refresh
+              </Button>
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
       </Table>
     )
   } else {
-    return (
+    const noBooks = (
       <div>
         <Header as="h3">No books yet. Maybe add one?</Header>
         {addButton}
       </div>
     )
+    return (
+      <div>
+        <Loader size="big" inline active={fetching}>
+          Fetching books...
+        </Loader>
+        {!fetching && noBooks}
+      </div>
+    )
   }
 }
 
-const mapStateToProps = (state: AppState): BookListStateProps => ({
-  books: state.books
+const mapStateToProps = (state: BookerState): BookListStateProps => ({
+  books: state.books.list,
+  fetching: state.books.fetching
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<BookerAction>): BookListDispatchProps => ({
+const mapDispatchToProps = (dispatch: BookerDispatch): BookListDispatchProps => ({
   editBook: book => {
     dispatch(actions.openEdit(book))
+  },
+  refreshBooks: () => {
+    dispatch(actions.refreshBooks())
   },
   removeBook: book => {
     dispatch(actions.removeBook(book))

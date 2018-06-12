@@ -1,4 +1,4 @@
-import { AppState, Book, EditState } from './types'
+import { Book, BooksState, EditState } from './types'
 
 export const emptyBook: Book = {
   author: '',
@@ -8,7 +8,10 @@ export const emptyBook: Book = {
   title: ''
 }
 
-export const initialBooksState: Book[] = []
+export const initalBooksState: BooksState = {
+  fetching: false,
+  list: []
+}
 
 export const initalEditState: EditState = {
   book: undefined,
@@ -20,11 +23,6 @@ export const initalEditState: EditState = {
   },
   open: false,
   values: emptyBook
-}
-
-export const initialState: AppState = {
-  books: initialBooksState,
-  edit: initalEditState
 }
 
 export const errorMessages = {
