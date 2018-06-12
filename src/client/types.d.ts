@@ -19,6 +19,7 @@ export interface EditState {
     title: boolean
   }
   open: boolean
+  sending: boolean
   values: Book
 }
 

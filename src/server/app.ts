@@ -9,6 +9,7 @@ const port = process.env.NODE_ENV === 'development' ? 3001 : 8080
 
 const app = express()
 app.use(express.static(clientBuildPath))
+app.use(express.json())
 
 const books = exampleBooks
 

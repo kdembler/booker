@@ -22,6 +22,7 @@ export const initalEditState: EditState = {
     title: false
   },
   open: false,
+  sending: false,
   values: emptyBook
 }
 

@@ -37,12 +37,39 @@ const changeFetching = (fetching: boolean): types.ChangeFetchingAction => ({
   type: 'BOOKS_FETCHING'
 })
 
-// standard actions
-export const addBook = (book: Book): types.AddBookAction => ({
-  book,
-  type: 'BOOK_ADD'
+export const addBook = (book: Book): AsyncAction => {
+  return (dispatch: Dispatch<types.BookerAction>) => {
+    dispatch(changeSending(true))
+    delay(2).then(() => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', '/api/books', true)
+      xhr.setRequestHeader('Content-Type', 'application/json')
+      const data = JSON.stringify(book)
+      xhr.send(data)
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            dispatch({
+              book,
+              type: 'BOOK_ADD'
+            })
+            dispatch(closeEdit())
+          } else {
+            // handle error
+          }
+          dispatch(changeSending(false))
+        }
+      }
+    })
+  }
+}
+
+const changeSending = (sending: boolean): types.ChangeSendingAction => ({
+  sending,
+  type: 'EDIT_SENDING'
 })
 
+// standard actions
 export const editBook = (book: Book, isbn: string): types.EditBookAction => ({
   book,
   isbn,

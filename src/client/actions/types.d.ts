@@ -56,10 +56,16 @@ export interface ChangeValidationErrorAction extends Action {
   error: boolean
 }
 
+export interface ChangeSendingAction extends Action {
+  type: 'EDIT_SENDING'
+  sending: boolean
+}
+
 export type EditAction =
   | OpenEditAction
   | CloseEditAction
   | ChangeValueAction
   | ChangeValidationErrorAction
+  | ChangeSendingAction
 
 export type BookerAction = BooksAction | EditAction

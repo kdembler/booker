@@ -32,7 +32,9 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
 
   const onSave = (e: React.FormEvent) => {
     e.preventDefault()
-    saveBook(edit.values, isbn)
+    if (!edit.sending) {
+      saveBook(edit.values, isbn)
+    }
   }
 
   const getErrorsList = () => {
@@ -115,6 +117,7 @@ const BookEditModal: React.SFC<BookEditModalProps> = ({
                   <Button
                     positive
                     type="submit"
+                    loading={edit.sending}
                     disabled={getErrorsList().length > 0}
                     onClick={onSave}
                   >
@@ -191,7 +194,6 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookEditModalDispatchProp
     } else {
       dispatch(actions.editBook(book, isbn))
     }
-    dispatch(actions.closeEdit())
   }
 })
 

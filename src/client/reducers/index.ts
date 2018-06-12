@@ -77,6 +77,11 @@ const edit = (state: EditState = initalEditState, action: EditAction): EditState
           [action.field]: action.error
         }
       }
+    case 'EDIT_SENDING':
+      return {
+        ...state,
+        sending: action.sending
+      }
     default:
       return state
   }
