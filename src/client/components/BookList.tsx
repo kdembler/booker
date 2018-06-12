@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import { Button, Header, Icon, Loader, Rating, Table } from 'semantic-ui-react'
 
 import * as actions from '../actions'
-import { Book, BookerDispatch, BookerState } from '../types'
+import { Book, BookerDispatch, BookerState, BooksState } from '../types'
 
 interface BookListStateProps {
-  books: Book[]
-  fetching: boolean
+  books: BooksState
 }
 
 interface BookListDispatchProps {
@@ -19,8 +18,7 @@ interface BookListDispatchProps {
 type BookListProps = BookListStateProps & BookListDispatchProps
 
 const BookList: React.SFC<BookListProps> = ({
-  books,
-  fetching,
+  books: { list: books, fetching },
   editBook,
   removeBook,
   refreshBooks
@@ -32,9 +30,9 @@ const BookList: React.SFC<BookListProps> = ({
   )
 
   if (books.length > 0) {
-    const rows = books.map(book => {
+    const rows = books.map((book, idx) => {
       const onEdit = () => editBook(book)
-      const onRemove = () => removeBook(book)
+      const onRemove = () => !book.removing[idx] && removeBook(book)
       return (
         <Table.Row key={book.isbn}>
           <Table.Cell>{book.title}</Table.Cell>
@@ -46,7 +44,7 @@ const BookList: React.SFC<BookListProps> = ({
           </Table.Cell>
           <Table.Cell width="2">
             <Button color="blue" icon="edit" onClick={onEdit} />
-            <Button color="red" icon="remove" onClick={onRemove} />
+            <Button color="red" icon="remove" loading={book.removing} onClick={onRemove} />
           </Table.Cell>
         </Table.Row>
       )
@@ -72,7 +70,7 @@ const BookList: React.SFC<BookListProps> = ({
                 floated="right"
                 icon
                 color="blue"
-                labelPosition="left"
+                labelPosition="right"
                 loading={fetching}
                 onClick={onRefresh}
               >
@@ -103,8 +101,7 @@ const BookList: React.SFC<BookListProps> = ({
 }
 
 const mapStateToProps = (state: BookerState): BookListStateProps => ({
-  books: state.books.list,
-  fetching: state.books.fetching
+  books: state.books
 })
 
 const mapDispatchToProps = (dispatch: BookerDispatch): BookListDispatchProps => ({
@@ -116,7 +113,8 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookListDispatchProps => 
     dispatch(actions.refreshBooks()).then(() => dispatch(actions.changeFetching(false)))
   },
   removeBook: book => {
-    dispatch(actions.removeBook(book))
+    dispatch(actions.changeRemoving(book.isbn, true))
+    dispatch(actions.removeBook(book.isbn))
   }
 })
 

@@ -5,9 +5,15 @@ import { BookerAction } from './actions/types'
 
 export { Book, BookerAction }
 
+// BookR is wrapper around Book for convenient storing of removal information
+export interface BookR extends Book {
+  removing: boolean
+}
+
 export interface BooksState {
   fetching: boolean
-  list: Book[]
+  list: BookR[]
+  // removals: boolean[]
 }
 
 export interface EditState {

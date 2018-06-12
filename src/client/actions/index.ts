@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
-import { EditRequest } from '../../common/types'
+import { EditRequest, RemovalRequest } from '../../common/types'
 import { Book, BookerState } from '../types'
 import { apiRequest } from '../utils'
 import * as types from './types'
@@ -13,7 +13,7 @@ type AsyncAction = ThunkAction<Promise<void>, BookerState, undefined, types.Book
 // async actions
 export const refreshBooks = (): AsyncAction => {
   return (dispatch: Dispatch<types.BookerAction>) => {
-    return delay(2).then(() => {
+    return delay(1).then(() => {
       return fetch('/api/books')
         .then(response => {
           if (!response.ok) {
@@ -34,7 +34,7 @@ export const refreshBooks = (): AsyncAction => {
 
 export const addBook = (book: Book): AsyncAction => {
   return (dispatch: Dispatch<types.BookerAction>) => {
-    return delay(2).then(() => {
+    return delay(1).then(() => {
       const data = JSON.stringify(book)
       return apiRequest('POST', data)
         .then(({ response, status }) => {
@@ -54,7 +54,7 @@ export const addBook = (book: Book): AsyncAction => {
 
 export const editBook = (book: Book, isbn: string): AsyncAction => {
   return (dispatch: Dispatch<types.BookerAction>) => {
-    return delay(2).then(() => {
+    return delay(1).then(() => {
       const req: EditRequest = {
         book,
         isbn
@@ -77,12 +77,30 @@ export const editBook = (book: Book, isbn: string): AsyncAction => {
   }
 }
 
-// standard actions
-export const removeBook = (book: Book): types.RemoveBookAction => ({
-  book,
-  type: 'BOOK_REMOVE'
-})
+export const removeBook = (isbn: string): AsyncAction => {
+  return (dispatch: Dispatch<types.BookerAction>) => {
+    return delay(1).then(() => {
+      const req: RemovalRequest = {
+        isbn
+      }
+      const data = JSON.stringify(req)
+      return apiRequest('DELETE', data)
+        .then(({ response, status }) => {
+          if (status === 200) {
+            dispatch({
+              isbn,
+              type: 'BOOK_REMOVE'
+            })
+          }
+        })
+        .catch(() => {
+          // handle error
+        })
+    })
+  }
+}
 
+// standard actions
 export const openEdit = (book?: Book): types.OpenEditAction => ({
   book,
   type: 'EDIT_OPEN'
@@ -115,4 +133,10 @@ export const changeSending = (sending: boolean): types.ChangeSendingAction => ({
 export const changeFetching = (fetching: boolean): types.ChangeFetchingAction => ({
   fetching,
   type: 'BOOKS_FETCHING'
+})
+
+export const changeRemoving = (isbn: string, removing: boolean): types.ChangeRemovingAction => ({
+  isbn,
+  removing,
+  type: 'BOOK_REMOVAL'
 })

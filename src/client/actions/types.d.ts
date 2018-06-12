@@ -12,6 +12,12 @@ export interface ChangeFetchingAction extends Action {
   fetching: boolean
 }
 
+export interface ChangeRemovingAction extends Action {
+  type: 'BOOK_REMOVAL'
+  isbn: string
+  removing: boolean
+}
+
 export interface EditBookAction extends Action {
   type: 'BOOK_EDIT'
   isbn: string
@@ -20,7 +26,7 @@ export interface EditBookAction extends Action {
 
 export interface RemoveBookAction extends Action {
   type: 'BOOK_REMOVE'
-  book: Book
+  isbn: string
 }
 
 export interface ReplaceBooksAction extends Action {
@@ -31,6 +37,7 @@ export interface ReplaceBooksAction extends Action {
 export type BooksAction =
   | AddBookAction
   | ChangeFetchingAction
+  | ChangeRemovingAction
   | EditBookAction
   | RemoveBookAction
   | ReplaceBooksAction
