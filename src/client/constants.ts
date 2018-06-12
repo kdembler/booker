@@ -9,7 +9,7 @@ export const emptyBook: Book = {
 }
 
 export const initalBooksState: BooksState = {
-  fetching: false,
+  fetching: true,
   list: []
 }
 

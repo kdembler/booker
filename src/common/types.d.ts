@@ -5,3 +5,8 @@ export interface Book {
   rating: number
   title: string
 }
+
+export interface EditRequest {
+  isbn: string
+  book: Book
+}

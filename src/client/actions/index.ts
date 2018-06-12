@@ -1,19 +1,20 @@
 import { Dispatch } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
+import { EditRequest } from '../../common/types'
 import { Book, BookerState } from '../types'
+import { apiRequest } from '../utils'
 import * as types from './types'
 
 const delay = (s: number) => new Promise((resolve, error) => setTimeout(() => resolve(), s * 1000))
 
-type AsyncAction = ThunkAction<void, BookerState, undefined, types.BookerAction>
+type AsyncAction = ThunkAction<Promise<void>, BookerState, undefined, types.BookerAction>
 
 // async actions
 export const refreshBooks = (): AsyncAction => {
   return (dispatch: Dispatch<types.BookerAction>) => {
-    dispatch(changeFetching(true))
-    delay(2).then(() => {
-      fetch('/api/books')
+    return delay(2).then(() => {
+      return fetch('/api/books')
         .then(response => {
           if (!response.ok) {
             // handle error
@@ -27,55 +28,56 @@ export const refreshBooks = (): AsyncAction => {
             type: 'BOOKS_REPLACE_ALL'
           })
         })
-        .then(() => dispatch(changeFetching(false)))
     })
   }
 }
 
-const changeFetching = (fetching: boolean): types.ChangeFetchingAction => ({
-  fetching,
-  type: 'BOOKS_FETCHING'
-})
-
 export const addBook = (book: Book): AsyncAction => {
   return (dispatch: Dispatch<types.BookerAction>) => {
-    dispatch(changeSending(true))
-    delay(2).then(() => {
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', '/api/books', true)
-      xhr.setRequestHeader('Content-Type', 'application/json')
+    return delay(2).then(() => {
       const data = JSON.stringify(book)
-      xhr.send(data)
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
+      return apiRequest('POST', data)
+        .then(({ response, status }) => {
+          if (status === 200) {
             dispatch({
               book,
               type: 'BOOK_ADD'
             })
-            dispatch(closeEdit())
-          } else {
-            // handle error
           }
-          dispatch(changeSending(false))
-        }
-      }
+        })
+        .catch(() => {
+          // handle error
+        })
     })
   }
 }
 
-const changeSending = (sending: boolean): types.ChangeSendingAction => ({
-  sending,
-  type: 'EDIT_SENDING'
-})
+export const editBook = (book: Book, isbn: string): AsyncAction => {
+  return (dispatch: Dispatch<types.BookerAction>) => {
+    return delay(2).then(() => {
+      const req: EditRequest = {
+        book,
+        isbn
+      }
+      const data = JSON.stringify(req)
+      return apiRequest('PUT', data)
+        .then(({ response, status }) => {
+          if (status === 200) {
+            dispatch({
+              book,
+              isbn,
+              type: 'BOOK_EDIT'
+            })
+          }
+        })
+        .catch(() => {
+          // handle error
+        })
+    })
+  }
+}
 
 // standard actions
-export const editBook = (book: Book, isbn: string): types.EditBookAction => ({
-  book,
-  isbn,
-  type: 'BOOK_EDIT'
-})
-
 export const removeBook = (book: Book): types.RemoveBookAction => ({
   book,
   type: 'BOOK_REMOVE'
@@ -103,4 +105,14 @@ export const changeValidationError = (
   error,
   field,
   type: 'EDIT_VALIDATION_ERROR'
+})
+
+export const changeSending = (sending: boolean): types.ChangeSendingAction => ({
+  sending,
+  type: 'EDIT_SENDING'
+})
+
+export const changeFetching = (fetching: boolean): types.ChangeFetchingAction => ({
+  fetching,
+  type: 'BOOKS_FETCHING'
 })

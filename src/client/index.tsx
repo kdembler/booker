@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import thunk, { ThunkMiddleware } from 'redux-thunk'
 
-import { refreshBooks } from './actions'
+import * as actions from './actions'
 import BookerApp from './components/BookerApp'
 import bookerReducer from './reducers'
 import registerServiceWorker from './registerServiceWorker'
@@ -23,7 +23,7 @@ const store = createStore(
 )
 
 // fetch initial state
-store.dispatch(refreshBooks())
+store.dispatch(actions.refreshBooks()).then(() => store.dispatch(actions.changeFetching(false)))
 
 ReactDOM.render(
   <Provider store={store}>

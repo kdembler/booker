@@ -112,7 +112,8 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookListDispatchProps => 
     dispatch(actions.openEdit(book))
   },
   refreshBooks: () => {
-    dispatch(actions.refreshBooks())
+    dispatch(actions.changeFetching(true))
+    dispatch(actions.refreshBooks()).then(() => dispatch(actions.changeFetching(false)))
   },
   removeBook: book => {
     dispatch(actions.removeBook(book))

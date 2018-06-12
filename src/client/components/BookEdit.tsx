@@ -189,11 +189,17 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookEditModalDispatchProp
     if (!validateAllFieldsAndDispatch(book, dispatch)) {
       return
     }
+    dispatch(actions.changeSending(true))
+    let action
     if (!isbn) {
-      dispatch(actions.addBook(book))
+      action = actions.addBook(book)
     } else {
-      dispatch(actions.editBook(book, isbn))
+      action = actions.editBook(book, isbn)
     }
+    dispatch(action).then(() => {
+      dispatch(actions.changeSending(false))
+      dispatch(actions.closeEdit())
+    })
   }
 })
 
