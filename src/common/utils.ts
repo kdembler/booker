@@ -36,7 +36,7 @@ export const isValidISBN = (isbnValue: string): boolean => {
     c = 11 - c
 
     return (c === 10 && check === 'X') || c === Number(check)
-  } else if (/^\d{13}$/.test(isbn)) {
+  } else if (/^(978|979)\d{10}$/.test(isbn)) {
     // ISBN-13
     const check = Number(isbn.slice(-1))
     const digits = toDigits(isbn.slice(0, 12))
