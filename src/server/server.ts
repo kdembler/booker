@@ -7,6 +7,7 @@ import {
   API_ENDPOINT,
   PORT,
   requestConflictErrorMessage,
+  requestInvalidRouteErrorMessage,
   requestNotFoundErrorMessage,
   STATIC_PATH
 } from './constants'
@@ -40,8 +41,12 @@ export default class Server {
     this.app = express()
     this.app.use(express.static(STATIC_PATH))
     this.app.use(express.json())
+
+    // validation middlewares
     this.app.post(`${API_ENDPOINT}`, this.bookMiddleware)
-    this.app.put(`${API_ENDPOINT}/*`, this.bookMiddleware)
+    this.app.put(`${API_ENDPOINT}/:isbn`, this.bookMiddleware)
+    this.app.put(`${API_ENDPOINT}/:isbn`, this.isbnMiddleware)
+    this.app.delete(`${API_ENDPOINT}/:isbn`, this.isbnMiddleware)
   }
 
   private bookMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -53,6 +58,16 @@ export default class Server {
       return
     }
     res.locals.book = book
+    next()
+  }
+
+  private isbnMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const isbn = req.params.isbn as string
+    if (!isbn || isbn.length < 10) {
+      res.status(400)
+      res.json(requestInvalidRouteErrorMessage)
+    }
+    res.locals.isbn = isbn
     next()
   }
 
@@ -73,7 +88,7 @@ export default class Server {
   }
 
   private addHandler(req: express.Request, res: express.Response) {
-    const book = res.locals.book
+    const { book } = res.locals
 
     const result = this.store.addBook(book)
     switch (result) {
@@ -87,8 +102,7 @@ export default class Server {
   }
 
   private editHandler(req: express.Request, res: express.Response) {
-    const isbn = req.params.isbn
-    const book = res.locals.book
+    const { isbn, book } = res.locals
 
     const result = this.store.editBook(isbn, book)
     switch (result) {
@@ -105,7 +119,7 @@ export default class Server {
   }
 
   private removeHandler(req: express.Request, res: express.Response) {
-    const isbn = req.params.isbn
+    const { isbn } = res.locals
 
     const result = this.store.removeBook(isbn)
     switch (result) {

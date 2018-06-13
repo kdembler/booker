@@ -18,6 +18,10 @@ export const requestConflictErrorMessage = {
   errors: ['book not found']
 }
 
+export const requestInvalidRouteErrorMessage = {
+  errors: ['invalid isbn route']
+}
+
 export const errorMessages = {
   author: 'author field must be at least 1 character long',
   isbn: 'isbn field must contain valid ISBN identifier',
