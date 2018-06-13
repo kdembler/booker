@@ -2,6 +2,10 @@
 
 Booker is a React + Express fullstack Typescript app that allows you to log your books.
 
+### Note
+
+Tested on Chrome.
+
 ## Live demo
 
 Wanna just play with it live? [Go ahead!](https://booker.kdembler.com)
