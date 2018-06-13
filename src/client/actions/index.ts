@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
-import { EditRequest, RemovalRequest } from '../../common/types'
 import { Book, BookerState } from '../types'
 import { apiRequest } from '../utils'
 import * as types from './types'
@@ -17,7 +16,7 @@ export const refreshBooks = (): AsyncAction => {
       return fetch('/api/books')
         .then(response => {
           if (!response.ok) {
-            throw {}
+            throw null
           }
           return response.json()
         })
@@ -53,12 +52,8 @@ export const addBook = (book: Book): AsyncAction => {
 export const editBook = (book: Book, isbn: string): AsyncAction => {
   return (dispatch: Dispatch<types.BookerAction>) => {
     return delay(1).then(() => {
-      const req: EditRequest = {
-        book,
-        isbn
-      }
-      const data = JSON.stringify(req)
-      return apiRequest('PUT', data).then(({ response, status }) => {
+      const data = JSON.stringify(book)
+      return apiRequest('PUT', data, `/${isbn}`).then(({ response, status }) => {
         if (status === 204) {
           dispatch({
             book,
@@ -66,7 +61,7 @@ export const editBook = (book: Book, isbn: string): AsyncAction => {
             type: 'BOOK_EDIT'
           })
         } else {
-          throw {}
+          throw null
         }
       })
     })
@@ -76,11 +71,8 @@ export const editBook = (book: Book, isbn: string): AsyncAction => {
 export const removeBook = (isbn: string): AsyncAction => {
   return (dispatch: Dispatch<types.BookerAction>) => {
     return delay(1).then(() => {
-      const req: RemovalRequest = {
-        isbn
-      }
-      const data = JSON.stringify(req)
-      return apiRequest('DELETE', data).then(({ response, status }) => {
+      const data = undefined
+      return apiRequest('DELETE', data, `/${isbn}`).then(({ response, status }) => {
         if (status === 204 || status === 404) {
           // accept 404 as well, user doesn't care that it was already deleted
           dispatch({
@@ -88,7 +80,7 @@ export const removeBook = (isbn: string): AsyncAction => {
             type: 'BOOK_REMOVE'
           })
         } else {
-          throw {}
+          throw null
         }
       })
     })

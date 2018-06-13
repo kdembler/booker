@@ -2,7 +2,7 @@ import * as express from 'express'
 import * as path from 'path'
 
 import { exampleBooks } from '../common/constants'
-import { Book, EditRequest, RemovalRequest } from '../common/types'
+import { Book } from '../common/types'
 import {
   API_ENDPOINT,
   PORT,
@@ -46,8 +46,8 @@ export default class Server {
     this.app.get('/', this.indexHandler.bind(this))
     this.app.get(API_ENDPOINT, this.getHandler.bind(this))
     this.app.post(API_ENDPOINT, this.addHandler.bind(this))
-    this.app.put(API_ENDPOINT, this.editHandler.bind(this))
-    this.app.delete(API_ENDPOINT, this.removeHandler.bind(this))
+    this.app.put(`${API_ENDPOINT}/:isbn`, this.editHandler.bind(this))
+    this.app.delete(`${API_ENDPOINT}/:isbn`, this.removeHandler.bind(this))
   }
 
   private indexHandler(req: express.Request, res: express.Response) {
@@ -79,8 +79,9 @@ export default class Server {
   }
 
   private editHandler(req: express.Request, res: express.Response) {
-    const edit = req.body as EditRequest
-    const errors = validateBook(edit.book)
+    const book = req.body as Book
+    const isbn = req.params.isbn
+    const errors = validateBook(book)
 
     if (errors.length !== 0) {
       res.status(400) // conflict
@@ -88,7 +89,7 @@ export default class Server {
       return
     }
 
-    const result = this.store.editBook(edit.isbn, edit.book)
+    const result = this.store.editBook(isbn, book)
     switch (result) {
       case 'NOT_FOUND':
         res.status(404)
@@ -103,9 +104,9 @@ export default class Server {
   }
 
   private removeHandler(req: express.Request, res: express.Response) {
-    const removal = req.body as RemovalRequest
+    const isbn = req.params.isbn
 
-    const result = this.store.removeBook(removal.isbn)
+    const result = this.store.removeBook(isbn)
     switch (result) {
       case 'NOT_FOUND':
         res.status(404)

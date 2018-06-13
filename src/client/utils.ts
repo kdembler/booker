@@ -1,7 +1,11 @@
-export const apiRequest = (type: 'POST' | 'PUT' | 'DELETE', data: string) =>
+export const apiRequest = (
+  type: 'POST' | 'PUT' | 'DELETE',
+  data?: string,
+  endpointExt: string = ''
+) =>
   new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
-    xhr.open(type, '/api/books', true)
+    xhr.open(type, `/api/books${endpointExt}`, true)
     xhr.setRequestHeader('Content-Type', 'application/json')
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
