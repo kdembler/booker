@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { Button, Form, Grid, Header, Message, Modal, Rating, Segment } from 'semantic-ui-react'
 
-import { isValidISBN } from '../../common/utils'
+import { isValidField } from '../../common/utils'
 import * as actions from '../actions'
 import { editFields, errorMessages } from '../constants'
 import { Book, BookerAction, BookerDispatch, BookerState, EditState } from '../types'
@@ -138,19 +138,7 @@ const validateFieldAndDispatch = (
   value: string,
   dispatch: Dispatch<BookerAction>
 ): boolean => {
-  let ok = true
-  switch (field) {
-    case 'pages':
-      const parsed = Number.parseFloat(value)
-      ok = value !== '' && !Number.isNaN(parsed) && parsed > 0 && Number.isInteger(parsed)
-      break
-    case 'isbn':
-      ok = isValidISBN(value)
-      break
-    default:
-      ok = value.length > 0
-      break
-  }
+  const ok = isValidField(field, value)
   dispatch(actions.changeValidationError(field, !ok))
   return ok
 }

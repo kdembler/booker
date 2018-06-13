@@ -31,8 +31,8 @@ const BookList: React.SFC<BookListProps> = ({
 
   if (books.length > 0) {
     const rows = books.map((book, idx) => {
-      const onEdit = () => editBook(book)
-      const onRemove = () => !book.removing[idx] && removeBook(book)
+      const onEdit = () => !book.removing && editBook(book)
+      const onRemove = () => !book.removing && removeBook(book)
       return (
         <Table.Row key={book.isbn}>
           <Table.Cell>{book.title}</Table.Cell>

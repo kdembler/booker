@@ -1,3 +1,24 @@
+const isValidIntegerValue = (value: string, predicate: (_: number) => boolean): boolean => {
+  const parsed = Number.parseFloat(value)
+  return !Number.isNaN(parsed) && Number.isInteger(parsed) && predicate(parsed)
+}
+
+export const isValidField = (field: string, value: string): boolean => {
+  if (value === undefined || value === null) {
+    return false
+  }
+  switch (field) {
+    case 'pages':
+      return isValidIntegerValue(value, n => n > 0)
+    case 'isbn':
+      return isValidISBN(value)
+    case 'rating':
+      return isValidIntegerValue(value, n => n >= 1 && n <= 5)
+    default:
+      return value.length > 0
+  }
+}
+
 const toDigits = (i: string) => i.split('').map(Number)
 
 export const isValidISBN = (isbnValue: string): boolean => {

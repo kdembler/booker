@@ -38,7 +38,7 @@ export const addBook = (book: Book): AsyncAction => {
       const data = JSON.stringify(book)
       return apiRequest('POST', data)
         .then(({ response, status }) => {
-          if (status === 200) {
+          if (status === 201) {
             dispatch({
               book,
               type: 'BOOK_ADD'
@@ -62,7 +62,7 @@ export const editBook = (book: Book, isbn: string): AsyncAction => {
       const data = JSON.stringify(req)
       return apiRequest('PUT', data)
         .then(({ response, status }) => {
-          if (status === 200) {
+          if (status === 204) {
             dispatch({
               book,
               isbn,
@@ -86,7 +86,8 @@ export const removeBook = (isbn: string): AsyncAction => {
       const data = JSON.stringify(req)
       return apiRequest('DELETE', data)
         .then(({ response, status }) => {
-          if (status === 200) {
+          if (status === 204 || status === 404) {
+            // accept 404 as well, user doesn't care that it was already deleted
             dispatch({
               isbn,
               type: 'BOOK_REMOVE'
