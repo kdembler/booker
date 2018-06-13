@@ -30,7 +30,7 @@ yarn start
 npm run start
 ```
 
-This will start the Webpack development server with hot reload for all your front-end needs and `tsc` watch with `nodemon` to keep back-end up to date all the time as well.
+This will start the Webpack development server with hot reload for all your front-end needs and `nodemon` with `ts-node` to keep back-end up to date all the time as well.
 
 ### Production setup
 

@@ -5,6 +5,7 @@
     "module": "commonjs",
     "target": "es5",
     "lib": ["es6", "dom"],
+    "rootDir": "src",
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
@@ -17,5 +18,5 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true
   },
-  "exclude": ["build"]
+  "exclude": ["build", "node_modules", "config", "scripts", "src/tests"]
 }

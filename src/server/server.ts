@@ -37,6 +37,11 @@ export default class Server {
     this.app.listen(port, () => console.log(`Booker listening on ${port}!`))
   }
 
+  // for testing
+  public getApp() {
+    return this.app
+  }
+
   private setUpExpress() {
     this.app = express()
     this.app.use(express.static(STATIC_PATH))
