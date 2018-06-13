@@ -27,7 +27,7 @@ To start Booker for development simply run `start` script:
 ```sh
 yarn start
 # or
-npm run start
+npm start
 ```
 
 This will start the Webpack development server with hot reload for all your front-end needs and `nodemon` with `ts-node` to keep back-end up to date all the time as well.
@@ -49,4 +49,14 @@ All's left to do is to fire it up:
 yarn start-server
 # or
 npm run start-server
+```
+
+### Tests
+
+For running tests use:
+
+```sh
+yarn test
+# or
+npm test
 ```
