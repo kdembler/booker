@@ -6,7 +6,7 @@ export const PORT = process.env.NODE_ENV === 'development' ? DEV_PORT : PROD_POR
 
 export const API_ENDPOINT = '/api/books'
 
-export const STATIC_PATH = path.join(__dirname, '..', '..', '..', 'build')
+export const STATIC_PATH = path.join(__dirname, '..', '..', 'build', 'static')
 
 export const bookFields = ['author', 'isbn', 'pages', 'rating', 'title']
 

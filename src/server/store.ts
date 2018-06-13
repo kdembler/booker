@@ -7,6 +7,8 @@ export default class Store {
   constructor(init?: Book[]) {
     if (init) {
       this.books = init
+    } else {
+      this.books = []
     }
   }
 
