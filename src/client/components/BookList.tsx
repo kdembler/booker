@@ -122,7 +122,10 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookListDispatchProps => 
     dispatch(actions.changeRemoving(book.isbn, true))
     dispatch(actions.removeBook(book.isbn))
       .then(() => toast.info(`${book.title} removed!`))
-      .catch(() => toast.error(`Couldn't remove the book. Maybe try again?`))
+      .catch(() => {
+        actions.changeRemoving(book.isbn, false)
+        toast.error(`Couldn't remove the book. Maybe try again?`)
+      })
   }
 })
 
