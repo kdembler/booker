@@ -197,7 +197,7 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookEditModalDispatchProp
           // conflicting isbn
           toast.error(`Provided ISBN is already used.`)
         } else {
-          toast.error(`Couldn't save the book.\nMaybe try again? ${status}`)
+          toast.error(`Couldn't save the book.\nMaybe try again?`)
         }
       })
   }
