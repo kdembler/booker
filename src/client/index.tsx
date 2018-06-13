@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { toast } from 'react-toastify'
 import { applyMiddleware, createStore } from 'redux'
 import thunk, { ThunkMiddleware } from 'redux-thunk'
 
@@ -23,7 +24,10 @@ const store = createStore(
 )
 
 // fetch initial state
-store.dispatch(actions.refreshBooks()).then(() => store.dispatch(actions.changeFetching(false)))
+store
+  .dispatch(actions.refreshBooks())
+  .then(() => store.dispatch(actions.changeFetching(false)))
+  .catch(() => toast.error(`Couldn't refresh book list. Maybe try again?`))
 
 ReactDOM.render(
   <Provider store={store}>

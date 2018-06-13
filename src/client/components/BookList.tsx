@@ -113,7 +113,7 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookListDispatchProps => 
     dispatch(actions.changeFetching(true))
     dispatch(actions.refreshBooks())
       .then(() => dispatch(actions.changeFetching(false)))
-      .catch(({ response, status }) => {
+      .catch(() => {
         dispatch(actions.changeFetching(false))
         toast.error(`Couldn't refresh book list. Maybe try again?`)
       })
