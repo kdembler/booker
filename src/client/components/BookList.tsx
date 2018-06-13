@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { toast } from 'react-toastify'
 import { Button, Header, Icon, Loader, Rating, Table } from 'semantic-ui-react'
 
 import * as actions from '../actions'
@@ -110,11 +111,18 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookListDispatchProps => 
   },
   refreshBooks: () => {
     dispatch(actions.changeFetching(true))
-    dispatch(actions.refreshBooks()).then(() => dispatch(actions.changeFetching(false)))
+    dispatch(actions.refreshBooks())
+      .then(() => dispatch(actions.changeFetching(false)))
+      .catch(({ response, status }) => {
+        dispatch(actions.changeFetching(false))
+        toast.error(`Couldn't refresh book list. Maybe try again?`)
+      })
   },
   removeBook: book => {
     dispatch(actions.changeRemoving(book.isbn, true))
     dispatch(actions.removeBook(book.isbn))
+      .then(() => toast.info(`${book.title} removed!`))
+      .catch(() => toast.error(`Couldn't remove the book. Maybe try again?`))
   }
 })
 

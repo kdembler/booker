@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { Container, Grid, Header, Icon } from 'semantic-ui-react'
 
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import './BookerApp.css'
+
 import BookEditModal from './BookEdit'
 import BookList from './BookList'
 
@@ -19,6 +23,7 @@ const BookerApp = () => {
         </Grid.Row>
       </Grid>
       <BookEditModal />
+      <ToastContainer hideProgressBar />
     </div>
   )
 }

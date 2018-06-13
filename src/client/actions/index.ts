@@ -17,7 +17,7 @@ export const refreshBooks = (): AsyncAction => {
       return fetch('/api/books')
         .then(response => {
           if (!response.ok) {
-            // handle error
+            throw {}
           }
           return response.json()
         })
@@ -36,18 +36,16 @@ export const addBook = (book: Book): AsyncAction => {
   return (dispatch: Dispatch<types.BookerAction>) => {
     return delay(1).then(() => {
       const data = JSON.stringify(book)
-      return apiRequest('POST', data)
-        .then(({ response, status }) => {
-          if (status === 201) {
-            dispatch({
-              book,
-              type: 'BOOK_ADD'
-            })
-          }
-        })
-        .catch(() => {
-          // handle error
-        })
+      return apiRequest('POST', data).then(({ response, status }) => {
+        if (status === 201) {
+          dispatch({
+            book,
+            type: 'BOOK_ADD'
+          })
+        } else {
+          throw { status }
+        }
+      })
     })
   }
 }
@@ -60,19 +58,17 @@ export const editBook = (book: Book, isbn: string): AsyncAction => {
         isbn
       }
       const data = JSON.stringify(req)
-      return apiRequest('PUT', data)
-        .then(({ response, status }) => {
-          if (status === 204) {
-            dispatch({
-              book,
-              isbn,
-              type: 'BOOK_EDIT'
-            })
-          }
-        })
-        .catch(() => {
-          // handle error
-        })
+      return apiRequest('PUT', data).then(({ response, status }) => {
+        if (status === 204) {
+          dispatch({
+            book,
+            isbn,
+            type: 'BOOK_EDIT'
+          })
+        } else {
+          throw {}
+        }
+      })
     })
   }
 }
@@ -84,19 +80,17 @@ export const removeBook = (isbn: string): AsyncAction => {
         isbn
       }
       const data = JSON.stringify(req)
-      return apiRequest('DELETE', data)
-        .then(({ response, status }) => {
-          if (status === 204 || status === 404) {
-            // accept 404 as well, user doesn't care that it was already deleted
-            dispatch({
-              isbn,
-              type: 'BOOK_REMOVE'
-            })
-          }
-        })
-        .catch(() => {
-          // handle error
-        })
+      return apiRequest('DELETE', data).then(({ response, status }) => {
+        if (status === 204 || status === 404) {
+          // accept 404 as well, user doesn't care that it was already deleted
+          dispatch({
+            isbn,
+            type: 'BOOK_REMOVE'
+          })
+        } else {
+          throw {}
+        }
+      })
     })
   }
 }

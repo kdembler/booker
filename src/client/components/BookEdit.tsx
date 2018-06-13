@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { toast } from 'react-toastify'
 import { Dispatch } from 'redux'
 import { Button, Form, Grid, Header, Message, Modal, Rating, Segment } from 'semantic-ui-react'
 
@@ -184,10 +185,21 @@ const mapDispatchToProps = (dispatch: BookerDispatch): BookEditModalDispatchProp
     } else {
       action = actions.editBook(book, isbn)
     }
-    dispatch(action).then(() => {
-      dispatch(actions.changeSending(false))
-      dispatch(actions.closeEdit())
-    })
+    dispatch(action)
+      .then(() => {
+        dispatch(actions.changeSending(false))
+        dispatch(actions.closeEdit())
+        toast.info(`${book.title} saved!`)
+      })
+      .catch(({ status }) => {
+        dispatch(actions.changeSending(false))
+        if (status === 409) {
+          // conflicting isbn
+          toast.error(`Provided ISBN is already used.`)
+        } else {
+          toast.error(`Couldn't save the book.\nMaybe try again? ${status}`)
+        }
+      })
   }
 })
 

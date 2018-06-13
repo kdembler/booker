@@ -24,15 +24,20 @@ app.get(API_ENDPOINT, (req, res) => {
 app.post(API_ENDPOINT, (req, res) => {
   const book = req.body as Book
   const errors = validateBook(book)
-
   if (errors.length !== 0) {
     res.status(400)
     res.json({ errors })
-  } else {
-    books = [...books, book]
-    res.status(201) // created
-    res.json(book)
+    return
   }
+  if (books.filter(b => b.isbn === book.isbn).length !== 0) {
+    res.status(409) // conflict
+    res.json({ errors: ['isbn already used'] })
+    return
+  }
+
+  books = [...books, book]
+  res.status(201) // created
+  res.json(book)
 })
 
 app.put(API_ENDPOINT, (req, res) => {
@@ -43,9 +48,19 @@ app.put(API_ENDPOINT, (req, res) => {
     res.json({ errors })
     return
   }
+  // check if book to be edited exists
   if (books.filter(book => book.isbn === edit.isbn).length === 0) {
     res.status(404)
     res.json({ errors: ['book not found'] })
+    return
+  }
+  // check if new isbn isn't already used
+  if (
+    edit.isbn !== edit.book.isbn &&
+    books.filter(book => book.isbn === edit.book.isbn).length !== 0
+  ) {
+    res.status(409) // conflict
+    res.json({ errors: ['isbn already used'] })
     return
   }
 
