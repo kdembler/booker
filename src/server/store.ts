@@ -4,8 +4,8 @@ import { StoreAddResult, StoreDeleteResult, StoreEditResult } from './types'
 export default class Store {
   private books: Book[]
 
-  constructor(init: Book[]) {
-    if (init !== undefined) {
+  constructor(init?: Book[]) {
+    if (init) {
       this.books = init
     }
   }

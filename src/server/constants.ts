@@ -1,7 +1,12 @@
-export const DEV_PORT = 3001
-export const PROD_PORT = 8080
+import * as path from 'path'
+
+const DEV_PORT = 3001
+const PROD_PORT = 8080
+export const PORT = process.env.NODE_ENV === 'development' ? DEV_PORT : PROD_PORT
 
 export const API_ENDPOINT = '/api/books'
+
+export const STATIC_PATH = path.join(__dirname, '..', '..', '..', 'build')
 
 export const bookFields = ['author', 'isbn', 'pages', 'rating', 'title']
 
