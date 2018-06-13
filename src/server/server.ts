@@ -40,6 +40,20 @@ export default class Server {
     this.app = express()
     this.app.use(express.static(STATIC_PATH))
     this.app.use(express.json())
+    this.app.post(`${API_ENDPOINT}`, this.bookMiddleware)
+    this.app.put(`${API_ENDPOINT}/*`, this.bookMiddleware)
+  }
+
+  private bookMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const book = req.body as Book
+    const errors = validateBook(book)
+    if (errors.length !== 0) {
+      res.status(400)
+      res.json({ errors })
+      return
+    }
+    res.locals.book = book
+    next()
   }
 
   private registerRoutes() {
@@ -59,13 +73,7 @@ export default class Server {
   }
 
   private addHandler(req: express.Request, res: express.Response) {
-    const book = req.body as Book
-    const errors = validateBook(book)
-    if (errors.length !== 0) {
-      res.status(400)
-      res.json({ errors })
-      return
-    }
+    const book = res.locals.book
 
     const result = this.store.addBook(book)
     switch (result) {
@@ -79,15 +87,8 @@ export default class Server {
   }
 
   private editHandler(req: express.Request, res: express.Response) {
-    const book = req.body as Book
     const isbn = req.params.isbn
-    const errors = validateBook(book)
-
-    if (errors.length !== 0) {
-      res.status(400) // conflict
-      res.json({ errors })
-      return
-    }
+    const book = res.locals.book
 
     const result = this.store.editBook(isbn, book)
     switch (result) {
