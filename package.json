@@ -59,7 +59,7 @@
   },
   "scripts": {
     "start": "concurrently \"node scripts/start.js\" \"nodemon --exec \"ts-node\" src/server/app.ts\"",
-    "start-server": "node src/build/server/app.js",
+    "start-server": "node build/server/app.js",
     "clean": "rm -r build",
     "build": "node scripts/build.js && tsc",
     "test": "mocha -r ts-node/register src/tests/*.spec.ts"
