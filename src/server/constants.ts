@@ -1,7 +1,7 @@
 import * as path from 'path'
 
 const DEV_PORT = 3001
-const PROD_PORT = 8080
+const PROD_PORT = process.env.BOOKER_PORT ? Number(process.env.BOOKER_PORT) : 8080
 export const PORT = process.env.NODE_ENV === 'development' ? DEV_PORT : PROD_PORT
 
 export const API_ENDPOINT = '/api/books'
